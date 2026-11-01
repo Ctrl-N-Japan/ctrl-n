@@ -1,0 +1,32 @@
+name: Sync main to Back-hrmcngs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-main-to-back-hrmcngs
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Back-hrmcngs
+        uses: actions/checkout@v4
+        with:
+          ref: Back-hrmcngs
+          fetch-depth: 0
+
+      - name: Merge main and push
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main Back-hrmcngs
+          git merge --ff-only origin/Back-hrmcngs
+          git merge --no-edit origin/main
+          git push origin HEAD:Back-hrmcngs
