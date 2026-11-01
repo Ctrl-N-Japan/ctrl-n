@@ -29,6 +29,9 @@
 - `contributors/index.html`: メンバー紹介（URL: `contributors/`）
 - `repo-list/index.html`: リポジトリ紹介（URL: `repo-list/`）
 - `assets/css/styles.css`: 全ページ共通のスタイル
+- `assets/js/repo-list.js`: GitHub の公開リポジトリ一覧を取得・表示
+
+リポジトリ紹介は GitHub API から一覧を取得します。通信失敗・API 制限時や JavaScript 無効時も、静的な紹介と GitHub へのリンクを利用できます。
 
 ビルドや依存パッケージは不要です。`python3 -m http.server 8000` を実行し、`http://localhost:8000/` をブラウザで開いて確認できます。
 各ページをディレクトリ内の `index.html` として配置し、リンク先を `.html` のない URL にしています。
