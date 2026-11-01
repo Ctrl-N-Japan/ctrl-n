@@ -25,10 +25,11 @@
 - **オープンソース:** チーム内での合意形成に基づき、透明性の高い開発を目指しています。
 
 ## サイトの構成
-- `index.html`: ホーム
-- `contributors.html`: メンバー紹介
-- `repo-list.html`: リポジトリ紹介
+- `index.html`: ホーム（URL: `./`）
+- `contributors/index.html`: メンバー紹介（URL: `contributors/`）
+- `repo-list/index.html`: リポジトリ紹介（URL: `repo-list/`）
 - `assets/css/styles.css`: 全ページ共通のスタイル
 
-ビルドや依存パッケージは不要です。`index.html` をブラウザで開いて確認できます。
-個別のメンバープロフィールは、公開情報が揃い次第 `contributors.html` に追加してください。
+ビルドや依存パッケージは不要です。`python3 -m http.server 8000` を実行し、`http://localhost:8000/` をブラウザで開いて確認できます。
+各ページをディレクトリ内の `index.html` として配置し、リンク先を `.html` のない URL にしています。
+個別のメンバープロフィールは、公開情報が揃い次第 `contributors/index.html` に追加してください。
