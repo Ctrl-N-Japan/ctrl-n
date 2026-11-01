@@ -15,8 +15,9 @@
   function apply() {
     root.dataset.theme = preference === 'system'
       ? (system.matches ? 'dark' : 'light') : preference;
-    const select = document.querySelector('#theme-select');
-    if (select) select.value = preference;
+    document.querySelectorAll('input[name="theme"]').forEach(input => {
+      input.checked = input.value === preference;
+    });
   }
 
   apply();
@@ -27,15 +28,15 @@
     apply();
   });
   document.addEventListener('DOMContentLoaded', () => {
-    const select = document.querySelector('#theme-select');
-    if (!select) return;
-    select.value = preference;
-    select.disabled = false;
-    select.addEventListener('change', () => {
-      if (!valid(select.value)) return;
-      preference = select.value;
-      apply();
-      try { localStorage.setItem(key, preference); } catch { /* Session only. */ }
+    document.querySelectorAll('input[name="theme"]').forEach(input => {
+      input.disabled = false;
+      input.addEventListener('change', () => {
+        if (!input.checked || !valid(input.value)) return;
+        preference = input.value;
+        apply();
+        try { localStorage.setItem(key, preference); } catch { /* Session only. */ }
+      });
     });
+    apply();
   });
 })();
