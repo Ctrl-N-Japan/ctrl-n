@@ -23,3 +23,43 @@
 - **Issueベースの開発:** 機能追加やバグ報告は、すべてGitHubのIssueを活用して管理しています。
 - **コードレビューの実施:** 原則として、メンバーによるレビューと承認を経てからメインブランチへ統合します。
 - **オープンソース:** チーム内での合意形成に基づき、透明性の高い開発を目指しています。
+
+## サイトの構成
+- `index.html`: ホーム（URL: `./`）
+- `contributors/index.html`: メンバー紹介（URL: `contributors/`）
+- `repo-list/index.html`: リポジトリ紹介（URL: `repo-list/`）
+- `assets/css/styles.css`: 全ページ共通のスタイル
+- `assets/js/repo-list.js`: GitHub の公開リポジトリ一覧を取得・表示
+
+リポジトリ紹介は GitHub API から一覧を取得します。通信失敗・API 制限時や JavaScript 無効時も、静的な紹介と GitHub へのリンクを利用できます。
+
+ビルドや依存パッケージは不要です。`python3 -m http.server 8000` を実行し、`http://localhost:8000/` をブラウザで開いて確認できます。
+各ページをディレクトリ内の `index.html` として配置し、リンク先を `.html` のない URL にしています。
+個別のメンバープロフィールは、公開情報が揃い次第 `contributors/index.html` に追加してください。
+
+メンバー紹介の `assets/js/contributors.js` は、このサイトのリポジトリにコミットした GitHub ユーザーのアイコン・ユーザー名・プロフィールリンクを取得します。通信失敗時も GitHub へのリンクを利用できます。
+
+全ページでライト・ダーク・システムの表示モードを選択できます。初期値はシステム設定で、選択はブラウザに保存されます。システム選択中は OS の配色変更にも追従します。共通処理は `assets/js/theme.js` です。
+
+## ローカルビルド・プレビュー
+
+Bash と Python 3 が必要です（Windows は WSL、または Python 3 が使える Git Bash を利用してください）。Node.js や npm のインストールは不要です。
+
+VS Code の「ターミナル → 新しいターミナル」で、プロジェクトのルートから実行します。
+
+```bash
+# ビルドしてローカルサーバーを起動
+bash local-build.sh
+
+# ビルドのみ
+bash local-build.sh --build
+
+# 別のポートでプレビュー
+bash local-build.sh --serve 8080
+```
+
+標準のプレビュー URL は `http://127.0.0.1:8000/` です。終了は `Ctrl+C`。変更を反映するには、停止してスクリプトを再実行してください（自動リロードはありません）。
+
+VS Code の「ターミナル → タスクの実行」から `Ctrl-N: ローカルプレビュー` も実行できます。`Ctrl+Shift+B`（macOS は `Cmd+Shift+B`）ではローカルビルドを実行します。
+
+公開用ファイルだけを `dist/` にコピーします。ビルド時に `dist/` は作り直されるため、直接編集しないでください。生成物は Git の管理対象外です。GitHub の一覧表示にはインターネット接続が必要です。
