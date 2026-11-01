@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Ctrl-N: ローカルビルド",
+      "type": "process",
+      "command": "bash",
+      "args": ["${workspaceFolder}/local-build.sh", "--build"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Ctrl-N: ローカルプレビュー",
+      "type": "process",
+      "command": "bash",
+      "args": ["${workspaceFolder}/local-build.sh", "--serve", "8000"],
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    }
+  ]
+}
