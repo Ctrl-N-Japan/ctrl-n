@@ -1,0 +1,60 @@
+/* IE11: explicit colors, regular blocks, and an always-visible navigation. */
+html { background: #f9f9f9; }
+body { margin: 0; background: #f9f9f9; color: #171717; font-size: 16px; line-height: 1.85; }
+a, p, h1, h2, h3 { color: #171717; }
+a:focus, summary:focus, input:focus + span { outline: 2px solid #171717; outline-offset: 3px; }
+.site-header, main, footer { width: 90%; max-width: 880px; margin: 0 auto; }
+.site-header { display: block; padding: 20px 0; border-bottom: 1px solid #d2d2d2; }
+.site-header::after { content: ''; display: table; clear: both; }
+.site-header > .logo { display: inline-block; margin-bottom: 16px; }
+.theme-control, .film-menu, details, summary { display: block; }
+.theme-control { float: right; width: auto; margin: 0 0 16px 16px; }
+.theme-control summary, .film-menu > summary, .film-caption { display: none; }
+.theme-popup { position: static; width: auto; border: 1px solid #d2d2d2; background: #f2f2f2; padding: 4px; box-shadow: none; }
+.theme-popup legend { display: none; }
+.theme-options { display: block; }
+.theme-options label { display: inline-block; }
+.theme-options span { color: #666; padding: 8px; min-height: 36px; }
+.theme-options input:checked + span { background: #dedede; color: #171717; }
+.film-menu { float: none; clear: both; width: auto; margin: 0; padding: 0; }
+.film-window, .film-panel { position: static; display: block; width: auto; padding: 0; background: transparent; border: 0; overflow: visible; filter: none; transform: none; animation: none; }
+.film-panel::before, .film-panel::after { display: none; }
+.film-panel nav { display: block; width: auto; margin: 0; }
+.film-panel nav a { display: inline-block; font-size: 14px; margin-right: 24px; padding: 8px 0; border: 0; }
+.film-panel nav a::before { display: none; }
+.film-panel nav a:hover, .film-panel nav a[aria-current] { background: transparent; text-decoration: underline; }
+.hero, .page-title { padding: 64px 0 48px; border-bottom: 1px solid #d2d2d2; }
+h1 { font-size: 48px; } .page-title h1 { font-size: 36px; } h2 { font-size: 25px; }
+.eyebrow, .number, .note, #contributors-status, #repo-status, footer p { color: #666; }
+.section { border-bottom: 1px solid #d2d2d2; }
+.activity-links { border-top: 1px solid #171717; }
+.activity-links a { display: block; border-bottom: 1px solid #d2d2d2; }
+.activity-links span { display: inline-block; width: 32%; }
+.activity-links small { color: #666; }
+.activity-links a:hover { background: #e8e8e8; }
+.grid { display: block; }
+.card { display: block; width: 100%; padding: 28px 0; border-bottom: 1px solid #d2d2d2; }
+.grid > .card { border-bottom: 1px solid #d2d2d2; }
+.grid > .card::after { display: none; }
+.project { display: block; }
+.tags { display: block; }
+.tags span { display: inline-block; margin: 0 8px 8px 0; background: #f2f2f2; }
+.contributor img { width: 80px; height: 80px; }
+.contributor .member-work-image { width: 100%; max-width: 560px; height: auto; border-radius: 4px; }
+footer { display: block; padding: 28px 0; }
+footer > * { display: inline-block; margin-right: 20px; }
+.skip-link { background: #fff; }
+.ie-dark, .ie-dark body { background: #121212; color: #ededed; }
+.ie-dark a, .ie-dark p, .ie-dark h1, .ie-dark h2, .ie-dark h3 { color: #ededed; }
+.ie-dark .eyebrow, .ie-dark .number, .ie-dark .note, .ie-dark #contributors-status, .ie-dark #repo-status, .ie-dark footer p, .ie-dark .activity-links small { color: #b5b5b5; }
+.ie-dark .theme-popup, .ie-dark .tags span { background: #1c1c1c; }
+.ie-dark .theme-options span { color: #b5b5b5; }
+.ie-dark .theme-options input:checked + span, .ie-dark .activity-links a:hover { background: #282828; color: #ededed; }
+.ie-dark .card, .ie-dark .grid > .card, .ie-dark .site-header, .ie-dark .hero, .ie-dark .page-title, .ie-dark .section, .ie-dark .activity-links a, .ie-dark .theme-popup { border-color: #3b3b3b; }
+.ie-dark .activity-links { border-color: #ededed; }
+.ie-dark a:focus, .ie-dark input:focus + span { outline-color: #ededed; }
+@media(max-width:640px) {
+  h1 { font-size: 34px; } .page-title h1 { font-size: 28px; } h2 { font-size: 21px; }
+  .activity-links span { display: block; width: auto; }
+  .activity-links small { display: block; }
+}
