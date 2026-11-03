@@ -1,14 +1,15 @@
 'use strict';
 
-// Keep the static introduction available until the complete list is loaded.
-(async () => {
+// Read the saved snapshot; page views do not call the GitHub API.
+
+(async (scriptUrl) => {
   const list = document.querySelector('#contributors-list');
   const status = document.querySelector('#contributors-status');
   if (!list || !status) return;
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
-  status.textContent = 'コントリビューターを読み込んでいます…';
+  status.textContent = '公開メンバーを読み込んでいます…';
   list.setAttribute('aria-busy', 'true');
 
   function element(tag, text, className) {
@@ -19,23 +20,55 @@
   }
 
   try {
-    const contributors = [];
-    for (let page = 1; ; page += 1) {
-      const response = await fetch(
-        `https://api.github.com/repos/Ctrl-N-Japan/ctrl-n/contributors?per_page=100&page=${page}`,
-        { headers: { Accept: 'application/vnd.github+json' }, signal: controller.signal }
-      );
-      if (!response.ok) throw new Error(`GitHub HTTP ${response.status}`);
-      const batch = response.status === 204 ? [] : await response.json();
-      if (!Array.isArray(batch)) throw new Error('Invalid contributor list');
-      contributors.push(...batch);
-      if (batch.length < 100) break;
-    }
+    const response = await fetch(new URL('../data/members.json', scriptUrl), { signal: controller.signal });
+    if (!response.ok) throw new Error(`Data HTTP ${response.status}`);
+    const members = await response.json();
+    if (!Array.isArray(members)) throw new Error('Invalid saved data');
 
+    // Optional settings are separate from the generated membership snapshot.
+    let themes = {};
+    try {
+      const response = await fetch(new URL('../data/member-themes.json', scriptUrl), { signal: controller.signal });
+      if (response.ok) {
+        const data = await response.json();
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
+          themes = Object.fromEntries(Object.entries(data).map(([login, theme]) => [login.toLowerCase(), theme]));
+        }
+      }
+    } catch { /* A missing theme file must not hide the members. */ }
+
+    let presets = {};
+    let applyMemberTheme = () => {};
+    try {
+      const [response, module] = await Promise.all([
+        fetch(new URL('../data/theme-presets.json', scriptUrl), { signal: controller.signal }),
+        import(new URL('./member-theme.mjs?v=season-time-1', scriptUrl)),
+      ]);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && typeof data === 'object' && !Array.isArray(data)) presets = data;
+      }
+      applyMemberTheme = module.applyMemberTheme;
+    } catch { /* Preset loading must not hide members. */ }
+
+    let profiles = {}, appendProfile = () => {};
+    try {
+      const [response, module] = await Promise.all([
+        fetch(new URL('../data/member-profiles.json', scriptUrl), { signal: controller.signal }),
+        import(new URL('./member-profile.mjs', scriptUrl)),
+      ]);
+      if (response.ok) profiles = await response.json();
+      appendProfile = module.appendProfile;
+    } catch { /* Profiles are optional; the member list remains available. */ }
+    members.sort((a, b) => (b.changed_lines || 0) - (a.changed_lines || 0) || a.login.localeCompare(b.login));
     const fragment = document.createDocumentFragment();
-    for (const person of contributors) {
-      if (typeof person.login !== 'string') throw new Error('Invalid contributor');
+    const themedCards = [];
+    for (const person of members) {
+      if (typeof person.login !== 'string') throw new Error('Invalid member');
       const card = element('article', '', 'card contributor');
+      const theme = themes[person.login.toLowerCase()];
+      applyMemberTheme(card, theme, presets);
+      if (['auto', 'auto-season', 'auto-time'].includes(theme?.theme)) themedCards.push({ card, theme });
       const avatar = document.createElement('img');
       // Construct URLs from the account name instead of trusting response URLs.
       avatar.src = `https://github.com/${encodeURIComponent(person.login)}.png?size=160`;
@@ -46,17 +79,27 @@
       const name = element('h3', person.login);
       const link = element('a', 'GitHub プロフィール ↗', 'text-link');
       link.href = `https://github.com/${encodeURIComponent(person.login)}`;
-      card.append(avatar, name, link);
+      const stats = element('p', `${(person.changed_lines || 0).toLocaleString('ja-JP')} 行の変更 · ${(person.commits || 0).toLocaleString('ja-JP')} コミット`, 'note');
+      card.append(avatar, name, stats, link);
+      appendProfile(card, profiles?.[person.login.toLowerCase()], scriptUrl);
       fragment.append(card);
     }
     list.replaceChildren(fragment);
-    status.textContent = contributors.length
-      ? `${contributors.length} 人のコントリビューターを表示しています。`
-      : 'コントリビューターはまだいません。';
+    if (themedCards.length) {
+      const refresh = () => {
+        const now = new Date();
+        for (const { card, theme } of themedCards) applyMemberTheme(card, theme, presets, now);
+      };
+      setInterval(refresh, 60_000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+    }
+    status.textContent = members.length
+      ? `${members.length} 人の公開メンバーを表示しています。`
+      : '公開設定のメンバーはまだいません。';
   } catch {
-    status.textContent = '最新情報を取得できませんでした。下の GitHub リンクからコントリビューターをご覧ください。';
+    status.textContent = '最新情報を取得できませんでした。下の GitHub リンクから公開メンバーをご覧ください。';
   } finally {
     clearTimeout(timeout);
     list.setAttribute('aria-busy', 'false');
   }
-})();
+})(document.currentScript.src);

@@ -1,7 +1,8 @@
 'use strict';
 
-// Keep the static introduction available until the complete list is loaded.
-(async () => {
+// Read the saved snapshot; page views do not call the GitHub API.
+
+(async (scriptUrl) => {
   const list = document.querySelector('#repo-list');
   const status = document.querySelector('#repo-status');
   if (!list || !status) return;
@@ -19,18 +20,10 @@
   }
 
   try {
-    const repositories = [];
-    for (let page = 1; ; page += 1) {
-      const response = await fetch(
-        `https://api.github.com/orgs/Ctrl-N-Japan/repos?type=public&sort=updated&per_page=100&page=${page}`,
-        { headers: { Accept: 'application/vnd.github+json' }, signal: controller.signal }
-      );
-      if (!response.ok) throw new Error(`GitHub HTTP ${response.status}`);
-      const batch = await response.json();
-      if (!Array.isArray(batch)) throw new Error('Invalid repository list');
-      repositories.push(...batch);
-      if (batch.length < 100) break;
-    }
+    const response = await fetch(new URL('../data/repos.json', scriptUrl), { signal: controller.signal });
+    if (!response.ok) throw new Error(`Data HTTP ${response.status}`);
+    const repositories = await response.json();
+    if (!Array.isArray(repositories)) throw new Error('Invalid saved data');
 
     const fragment = document.createDocumentFragment();
     for (const repo of repositories) {
@@ -58,4 +51,4 @@
     clearTimeout(timeout);
     list.setAttribute('aria-busy', 'false');
   }
-})();
+})(document.currentScript.src);
