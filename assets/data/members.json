@@ -1,17 +1,17 @@
 [
   {
+    "login": "hrmcngs",
+    "additions": 3111,
+    "deletions": 152,
+    "commits": 12,
+    "changed_lines": 3263
+  },
+  {
     "login": "taku-bi",
     "additions": 595,
     "deletions": 29,
     "commits": 7,
     "changed_lines": 624
-  },
-  {
-    "login": "hrmcngs",
-    "additions": 462,
-    "deletions": 53,
-    "commits": 9,
-    "changed_lines": 515
   },
   {
     "login": "aya526dev",
