@@ -249,8 +249,4 @@ footer > a:last-child { margin-left: auto; }
 #contributors-list > .contributor { border-bottom-color: var(--line); }
 #contributors-list > .contributor::after { border-bottom-color: var(--line); }
 
-/* Gotham branding uses a separate readable color for each display mode. */
-:root { --brand: #1c6f5a; }
-:root[data-theme="dark"] { --brand: #2aa889; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme]) { --brand: #2aa889; } }
-.logo, .hero > h1 { color: var(--brand); }
+.logo, .hero > h1 { color: var(--ink); }
