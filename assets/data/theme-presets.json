@@ -530,14 +530,14 @@
   "gotham": {
     "light": {
       "title_color": "#1c6f5a",
-      "icon_color": "#3b6771",
+      "icon_color": "#1c6f5a",
       "text_color": "#505050",
       "bg_color": "#e7e7e8",
       "border_color": "#aad3c9"
     },
     "dark": {
       "title_color": "#2aa889",
-      "icon_color": "#599cab",
+      "icon_color": "#2aa889",
       "text_color": "#bebebe",
       "bg_color": "#111212",
       "border_color": "#194238"
