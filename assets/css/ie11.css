@@ -59,5 +59,5 @@ footer > * { display: inline-block; margin-right: 20px; }
   .activity-links small { display: block; }
 }
 
-.logo, .hero > h1 { color: #1c6f5a; }
-.ie-dark .logo, .ie-dark .hero > h1 { color: #2aa889; }
+.logo, .hero > h1 { color: #171717; }
+.ie-dark .logo, .ie-dark .hero > h1 { color: #ededed; }

@@ -16,17 +16,23 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Back-hrmcngs
+      - name: Check out main
         uses: actions/checkout@v4
         with:
-          ref: Back-hrmcngs
+          ref: main
           fetch-depth: 0
 
       - name: Merge main and push
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git fetch origin main Back-hrmcngs
-          git merge --ff-only origin/Back-hrmcngs
-          git merge --no-edit origin/main
+          git fetch origin refs/heads/main:refs/remotes/origin/main
+          remote_branch=$(git ls-remote --heads origin refs/heads/Back-hrmcngs)
+          if [ -n "$remote_branch" ]; then
+            git fetch origin refs/heads/Back-hrmcngs:refs/remotes/origin/Back-hrmcngs
+            git switch -C Back-hrmcngs origin/Back-hrmcngs
+            git merge --no-edit origin/main
+          else
+            git switch -c Back-hrmcngs origin/main
+          fi
           git push origin HEAD:Back-hrmcngs
