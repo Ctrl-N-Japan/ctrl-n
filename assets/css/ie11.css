@@ -58,3 +58,6 @@ footer > * { display: inline-block; margin-right: 20px; }
   .activity-links span { display: block; width: auto; }
   .activity-links small { display: block; }
 }
+
+.logo, .hero > h1 { color: #1c6f5a; }
+.ie-dark .logo, .ie-dark .hero > h1 { color: #2aa889; }

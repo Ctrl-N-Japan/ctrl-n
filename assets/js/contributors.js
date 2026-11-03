@@ -28,7 +28,7 @@
     // Optional settings are separate from the generated membership snapshot.
     let themes = {};
     try {
-      const response = await fetch(new URL('../data/member-themes.json', scriptUrl), { signal: controller.signal });
+      const response = await fetch(new URL('../data/member-themes.json', scriptUrl), { signal: controller.signal, cache: 'no-store' });
       if (response.ok) {
         const data = await response.json();
         if (data && typeof data === 'object' && !Array.isArray(data)) {
@@ -41,7 +41,7 @@
     let applyMemberTheme = () => {};
     try {
       const [response, module] = await Promise.all([
-        fetch(new URL('../data/theme-presets.json', scriptUrl), { signal: controller.signal }),
+        fetch(new URL('../data/theme-presets.json', scriptUrl), { signal: controller.signal, cache: 'no-store' }),
         import(new URL('./member-theme.mjs?v=season-time-1', scriptUrl)),
       ]);
       if (response.ok) {
