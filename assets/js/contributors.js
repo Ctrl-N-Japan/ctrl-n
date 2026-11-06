@@ -60,7 +60,7 @@
       if (response.ok) profiles = await response.json();
       appendProfile = module.appendProfile;
     } catch { /* Profiles are optional; the member list remains available. */ }
-    members.sort((a, b) => (b.changed_lines || 0) - (a.changed_lines || 0) || a.login.localeCompare(b.login));
+    members.sort((a, b) => (b.score ?? b.changed_lines ?? 0) - (a.score ?? a.changed_lines ?? 0) || (b.changed_lines || 0) - (a.changed_lines || 0) || a.login.localeCompare(b.login));
     const fragment = document.createDocumentFragment();
     const themedCards = [];
     for (const person of members) {
@@ -79,7 +79,7 @@
       const name = element('h3', person.login);
       const link = element('a', 'GitHub プロフィール ↗', 'text-link');
       link.href = `https://github.com/${encodeURIComponent(person.login)}`;
-      const stats = element('p', `${(person.changed_lines || 0).toLocaleString('ja-JP')} 行の変更 · ${(person.commits || 0).toLocaleString('ja-JP')} コミット`, 'note');
+      const stats = element('p', `${(person.changed_lines || 0).toLocaleString('ja-JP')} 行の変更 · ${(person.commits || 0).toLocaleString('ja-JP')} コミット · ${(person.reviews || 0).toLocaleString('ja-JP')} レビュー`, 'note');
       card.append(avatar, name, stats, link);
       appendProfile(card, profiles?.[person.login.toLowerCase()], scriptUrl);
       fragment.append(card);

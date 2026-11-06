@@ -1,37 +1,47 @@
 [
   {
     "login": "hrmcngs",
-    "additions": 3111,
-    "deletions": 152,
-    "commits": 12,
-    "changed_lines": 3263
+    "additions": 3160,
+    "deletions": 184,
+    "commits": 15,
+    "reviews": 0,
+    "changed_lines": 3344,
+    "score": 3344
   },
   {
     "login": "taku-bi",
     "additions": 595,
     "deletions": 29,
     "commits": 7,
-    "changed_lines": 624
+    "reviews": 0,
+    "changed_lines": 624,
+    "score": 624
   },
   {
     "login": "aya526dev",
     "additions": 0,
     "deletions": 0,
     "commits": 0,
-    "changed_lines": 0
+    "reviews": 0,
+    "changed_lines": 0,
+    "score": 0
   },
   {
     "login": "Fugu0141",
     "additions": 0,
     "deletions": 0,
     "commits": 0,
-    "changed_lines": 0
+    "reviews": 0,
+    "changed_lines": 0,
+    "score": 0
   },
   {
     "login": "matimasuru",
     "additions": 0,
     "deletions": 0,
     "commits": 0,
-    "changed_lines": 0
+    "reviews": 0,
+    "changed_lines": 0,
+    "score": 0
   }
 ]

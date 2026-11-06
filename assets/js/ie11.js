@@ -77,13 +77,13 @@
       load('members.json', function (error, members) {
         if (error || !Array.isArray(members)) { status.textContent = 'メンバーを取得できませんでした。GitHubリンクをご覧ください。'; list.setAttribute('aria-busy', 'false'); return; }
         load('member-profiles.json', function (ignored, profiles) {
-          members.sort(function (a, b) { return (b.changed_lines || 0) - (a.changed_lines || 0) || a.login.localeCompare(b.login); });
+          members.sort(function (a, b) { return (typeof b.score === 'number' ? b.score : b.changed_lines || 0) - (typeof a.score === 'number' ? a.score : a.changed_lines || 0) || (b.changed_lines || 0) - (a.changed_lines || 0) || a.login.localeCompare(b.login); });
           var fragment = document.createDocumentFragment();
           members.forEach(function (person) {
             var card = node('article', '', 'card contributor'), avatar = node('img');
             avatar.src = 'https://github.com/' + encodeURIComponent(person.login) + '.png?size=160'; avatar.alt = ''; avatar.width = avatar.height = 80;
             card.appendChild(avatar); card.appendChild(node('h3', person.login));
-            card.appendChild(node('p', (person.changed_lines || 0) + ' 行の変更 · ' + (person.commits || 0) + ' コミット', 'note'));
+            card.appendChild(node('p', (person.changed_lines || 0) + ' 行の変更 · ' + (person.commits || 0) + ' コミット · ' + (person.reviews || 0) + ' レビュー', 'note'));
             var link = node('a', 'GitHub プロフィール ↗', 'text-link'); link.href = 'https://github.com/' + encodeURIComponent(person.login); card.appendChild(link);
             profile(card, profiles && profiles[person.login.toLowerCase()]); fragment.appendChild(card);
           });
