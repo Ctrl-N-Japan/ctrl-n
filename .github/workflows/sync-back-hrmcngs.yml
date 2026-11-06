@@ -2,37 +2,33 @@ name: Sync main to Back-hrmcngs
 
 on:
   push:
-    branches: [main]
+    branches: [main, Back-hrmcngs]
   workflow_dispatch:
 
 permissions:
   contents: write
 
+# Share the lock with the data updater to avoid competing branch writes.
 concurrency:
-  group: sync-main-to-back-hrmcngs
+  group: organization-data-and-branch-sync
   cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out main
+      - name: Check out workflow revision
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.sha }}
           fetch-depth: 0
-
-      - name: Merge main and push
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sync main and regenerate conflicting snapshots
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git fetch origin refs/heads/main:refs/remotes/origin/main
-          remote_branch=$(git ls-remote --heads origin refs/heads/Back-hrmcngs)
-          if [ -n "$remote_branch" ]; then
-            git fetch origin refs/heads/Back-hrmcngs:refs/remotes/origin/Back-hrmcngs
-            git switch -C Back-hrmcngs origin/Back-hrmcngs
-            git merge --no-edit origin/main
-          else
-            git switch -c Back-hrmcngs origin/main
-          fi
-          git push origin HEAD:Back-hrmcngs
+          bash scripts/sync-main.sh Back-hrmcngs --push
