@@ -5,8 +5,9 @@
     "deletions": 223,
     "commits": 17,
     "reviews": 0,
+    "merged_prs": 8,
     "changed_lines": 3564,
-    "score": 3564
+    "score": 4364
   },
   {
     "login": "taku-bi",
@@ -14,6 +15,7 @@
     "deletions": 29,
     "commits": 7,
     "reviews": 0,
+    "merged_prs": 0,
     "changed_lines": 624,
     "score": 624
   },
@@ -23,6 +25,7 @@
     "deletions": 0,
     "commits": 0,
     "reviews": 0,
+    "merged_prs": 0,
     "changed_lines": 0,
     "score": 0
   },
@@ -32,6 +35,7 @@
     "deletions": 0,
     "commits": 0,
     "reviews": 0,
+    "merged_prs": 0,
     "changed_lines": 0,
     "score": 0
   },
@@ -41,6 +45,7 @@
     "deletions": 0,
     "commits": 0,
     "reviews": 0,
+    "merged_prs": 0,
     "changed_lines": 0,
     "score": 0
   }

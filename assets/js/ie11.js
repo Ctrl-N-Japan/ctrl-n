@@ -83,7 +83,7 @@
             var card = node('article', '', 'card contributor'), avatar = node('img');
             avatar.src = 'https://github.com/' + encodeURIComponent(person.login) + '.png?size=160'; avatar.alt = ''; avatar.width = avatar.height = 80;
             card.appendChild(avatar); card.appendChild(node('h3', person.login));
-            card.appendChild(node('p', (person.changed_lines || 0) + ' 行の変更 · ' + (person.commits || 0) + ' コミット · ' + (person.reviews || 0) + ' レビュー', 'note'));
+            card.appendChild(node('p', (person.changed_lines || 0) + ' 行の変更 · ' + (person.commits || 0) + ' コミット · ' + (person.reviews || 0) + ' レビュー · ' + (person.merged_prs || 0) + ' PRマージ', 'note'));
             var link = node('a', 'GitHub プロフィール ↗', 'text-link'); link.href = 'https://github.com/' + encodeURIComponent(person.login); card.appendChild(link);
             profile(card, profiles && profiles[person.login.toLowerCase()]); fragment.appendChild(card);
           });
