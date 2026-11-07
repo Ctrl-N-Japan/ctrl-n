@@ -49,6 +49,7 @@ export async function contributorStats(repository) {
 }
 
 export const REVIEW_POINTS = 100;
+export const MERGED_PR_POINTS = 100;
 
 async function pages(endpoint) {
   const results = [];
@@ -77,19 +78,28 @@ export function countReviewedPullRequests(pulls) {
   return counts;
 }
 
-export async function reviewStats(repository) {
+export function countMergedPullRequests(pulls) {
+  const counts = {};
+  for (const pull of pulls) {
+    const login = pull.user?.login?.toLowerCase();
+    if (login && pull.merged_at) counts[login] = (counts[login] || 0) + 1;
+  }
+  return counts;
+}
+
+export async function pullRequestStats(repository) {
   const base = 'repos/' + organization + '/' + encodeURIComponent(repository);
   const pulls = await pages(base + '/pulls?state=all');
   const result = [];
   for (const pull of pulls) {
     result.push({ author: pull.user?.login, reviews: await pages(base + '/pulls/' + pull.number + '/reviews') });
   }
-  return countReviewedPullRequests(result);
+  return { reviews: countReviewedPullRequests(result), merged: countMergedPullRequests(pulls) };
 }
 
-export function rankMembers(members, statistics, reviewCounts = {}) {
+export function rankMembers(members, statistics, reviewCounts = {}, mergedCounts = {}) {
   const totals = new Map(members.map(member => [member.login.toLowerCase(), {
-    ...member, additions: 0, deletions: 0, commits: 0, reviews: reviewCounts[member.login.toLowerCase()] || 0,
+    ...member, additions: 0, deletions: 0, commits: 0, reviews: reviewCounts[member.login.toLowerCase()] || 0, merged_prs: mergedCounts[member.login.toLowerCase()] || 0,
   }]));
   for (const repository of statistics) {
     for (const contributor of repository) {
@@ -103,7 +113,7 @@ export function rankMembers(members, statistics, reviewCounts = {}) {
     }
   }
   return [...totals.values()]
-    .map(member => ({ ...member, changed_lines: member.additions + member.deletions, score: member.additions + member.deletions + member.reviews * REVIEW_POINTS }))
+    .map(member => ({ ...member, changed_lines: member.additions + member.deletions, score: member.additions + member.deletions + member.reviews * REVIEW_POINTS + member.merged_prs * MERGED_PR_POINTS }))
     .sort((a, b) => b.score - a.score || b.changed_lines - a.changed_lines || a.login.toLowerCase().localeCompare(b.login.toLowerCase()));
 }
 
@@ -113,12 +123,13 @@ export async function main() {
   const repos = await collect('repos?type=public&sort=updated', ['name', 'description', 'language', 'archived']);
   const statistics = [];
   for (const repo of repos) statistics.push(await contributorStats(repo.name));
-  const reviewCounts = {};
+  const reviewCounts = {}, mergedCounts = {};
   for (const repo of repos) {
-    const counts = await reviewStats(repo.name);
-    for (const [login, count] of Object.entries(counts)) reviewCounts[login] = (reviewCounts[login] || 0) + count;
+    const counts = await pullRequestStats(repo.name);
+    for (const [login, count] of Object.entries(counts.reviews)) reviewCounts[login] = (reviewCounts[login] || 0) + count;
+    for (const [login, count] of Object.entries(counts.merged)) mergedCounts[login] = (mergedCounts[login] || 0) + count;
   }
-  const data = { 'members.json': rankMembers(members, statistics, reviewCounts), 'repos.json': repos };
+  const data = { 'members.json': rankMembers(members, statistics, reviewCounts, mergedCounts), 'repos.json': repos };
   await mkdir(outputDirectory, { recursive: true });
   for (const [filename, items] of Object.entries(data)) {
     await writeFile(resolve(outputDirectory, filename), `${JSON.stringify(items, null, 2)}\n`);

@@ -20,7 +20,7 @@
   }
 
   try {
-    const response = await fetch(new URL('../data/members.json', scriptUrl), { signal: controller.signal });
+    const response = await fetch(new URL('../data/members.json', scriptUrl), { signal: controller.signal, cache: 'no-store' });
     if (!response.ok) throw new Error(`Data HTTP ${response.status}`);
     const members = await response.json();
     if (!Array.isArray(members)) throw new Error('Invalid saved data');
@@ -79,7 +79,7 @@
       const name = element('h3', person.login);
       const link = element('a', 'GitHub プロフィール ↗', 'text-link');
       link.href = `https://github.com/${encodeURIComponent(person.login)}`;
-      const stats = element('p', `${(person.changed_lines || 0).toLocaleString('ja-JP')} 行の変更 · ${(person.commits || 0).toLocaleString('ja-JP')} コミット · ${(person.reviews || 0).toLocaleString('ja-JP')} レビュー`, 'note');
+      const stats = element('p', `${(person.changed_lines || 0).toLocaleString('ja-JP')} 行の変更 · ${(person.commits || 0).toLocaleString('ja-JP')} コミット · ${(person.reviews || 0).toLocaleString('ja-JP')} レビュー · ${(person.merged_prs || 0).toLocaleString('ja-JP')} PRマージ`, 'note');
       card.append(avatar, name, stats, link);
       appendProfile(card, profiles?.[person.login.toLowerCase()], scriptUrl);
       fragment.append(card);
